@@ -46,4 +46,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function farmingSeasons()
+    {
+        return $this->hasMany(FarmingSeason::class);
+    }
 }
