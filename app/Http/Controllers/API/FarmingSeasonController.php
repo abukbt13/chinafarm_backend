@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\FarmingSeason;
 use Illuminate\Http\Request;
 
 class FarmingSeasonController extends Controller
@@ -15,10 +16,21 @@ class FarmingSeasonController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'description' => 'nullable|string',
         ]);
+//            dd($validated);
+        $validated['user_id'] = auth()->id(); // ✅ Add logged-in user ID
 
-        $season = auth()->user()->farmingSeasons()->create($validated);
+        $season = FarmingSeason::create($validated);
 
-        return response()->json($season, 201);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Farming Season created.',
+        ]);
     }
-
+    public function show(){
+        $crops = FarmingSeason::all();
+        return response()->json([
+            'status' => 'success',
+            'crops' => $crops,
+        ]);
+    }
 }

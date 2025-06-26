@@ -15,5 +15,6 @@ Route::get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/farming-seasons', [FarmingSeasonController::class, 'store']);
+    Route::get('/farming-seasons', [FarmingSeasonController::class, 'show']);
     Route::get('/profile', fn (Request $request) => $request->user());
 });
