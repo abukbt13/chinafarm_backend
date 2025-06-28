@@ -24,8 +24,13 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json($user, 201);
+        return response()->json([
+            'status' => 'success',
+            'user'=>$user,
+            'token' => $token,
+        ],201);
     }
 
     public function login(Request $request)

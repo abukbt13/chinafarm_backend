@@ -33,4 +33,14 @@ class FarmingSeasonController extends Controller
             'crops' => $crops,
         ]);
     }
+    public function GetFarmingSeasonById($id)
+    {
+        $farmingSeason = FarmingSeason::findOrFail($id);
+
+        return response()->json([
+            'status' => 'success',
+            'farming_season' => $farmingSeason,
+        ]);
+
+    }
 }
