@@ -5,20 +5,21 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Milestone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class MilestoneController extends Controller
 {
-    public function show()
+    public function show($id)
     {
-        $milestone  = Milestone::all();
+        $milestone  = Milestone::where('season_id',$id)->get();
         return response()->json([
             'status' => 'success',
             'milestones' => $milestone
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request,$id)
     {
         $validated = $request->validate([
             'date' => 'required|date',
@@ -39,6 +40,8 @@ class MilestoneController extends Controller
         }
 
         $milestone = Milestone::create([
+            'user_id'=>Auth::user()->id,
+            'season_id'=>$id,
             'date' => $validated['date'],
             'description' => $validated['description'],
             'pictures' => $picturePaths,

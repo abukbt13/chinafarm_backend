@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Milestone extends Model
 {
     protected $fillable = [
-        'date', 'description', 'pictures'
+        'date', 'description', 'pictures','season_id','user_id'
     ];
 
     protected $casts = [

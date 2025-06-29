@@ -16,6 +16,8 @@ return new class extends Migration
             $table->date('date');
             $table->text('description');
             $table->json('pictures')->nullable(); // store multiple image paths/URLs
+            $table->text('season_id');
+            $table->text('user_id');
             $table->timestamps();
         });
     }
