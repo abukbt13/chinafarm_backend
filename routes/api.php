@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\FarmingSeasonController;
 use App\Http\Controllers\API\MilestoneController;
+use App\Http\Controllers\ExpenseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +16,10 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/farming-seasons', [FarmingSeasonController::class, 'store']);
-    Route::get('/farming-seasons', [FarmingSeasonController::class, 'show']);
+    Route::post('/farming-progress', [FarmingSeasonController::class, 'store']);
+    Route::get('/farming-progress', [FarmingSeasonController::class, 'show']);
 
-    Route::get('/farming-season/{id}', [FarmingSeasonController::class, 'GetFarmingSeasonById']);
+    Route::get('/farming-progress/{id}', [FarmingSeasonController::class, 'GetFarmingSeasonById']);
 
 
     Route::post('/milestone/{id}', [MilestoneController::class, 'create']);
@@ -27,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/milestone/update/{id}', [MilestoneController::class, 'UpdateMilestone']);
 
 
+//    Route::get('expenses/{season_id}', ExpenseController::class,'GetExpenses');
+    Route::post('/expenses/{season_id}', [ExpenseController::class, 'storeExpenses']);
+    Route::get('/expenses/{season_id}', [ExpenseController::class, 'ShowExpenses']);
 
 
     Route::get('/profile', fn (Request $request) => $request->user());

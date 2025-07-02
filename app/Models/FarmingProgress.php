@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FarmingSeason extends Model
+class FarmingProgress extends Model
 {
     protected $fillable = [
         'crop',
@@ -13,5 +13,4 @@ class FarmingSeason extends Model
         'description',
         'user_id'
     ];
-
 }

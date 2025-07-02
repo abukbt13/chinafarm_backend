@@ -25,7 +25,7 @@ class MilestoneController extends Controller
             'date' => 'required|date',
             'description' => 'required|string',
             'pictures' => 'nullable|array',
-            'pictures.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'pictures.*' => 'image|mimes:jpg,jpeg,png,webp',
         ]);
 
         $picturePaths = [];

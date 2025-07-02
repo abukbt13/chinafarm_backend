@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('farming_seasons', function (Blueprint $table) {
+        Schema::create('farming_progress', function (Blueprint $table) {
             $table->id();
             $table->string('crop');
             $table->date('start_date');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('farming_seasons');
+        Schema::dropIfExists('farming_progress');
     }
 };

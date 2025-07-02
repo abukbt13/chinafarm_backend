@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\FarmingProgress;
 use App\Models\FarmingSeason;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class FarmingSeasonController extends Controller
 //            dd($validated);
         $validated['user_id'] = auth()->id(); // ✅ Add logged-in user ID
 
-        $season = FarmingSeason::create($validated);
+        $season = FarmingProgress::create($validated);
 
         return response()->json([
             'status' => 'success',
@@ -27,7 +28,7 @@ class FarmingSeasonController extends Controller
         ]);
     }
     public function show(){
-        $crops = FarmingSeason::all();
+        $crops = FarmingProgress::all();
         return response()->json([
             'status' => 'success',
             'crops' => $crops,
@@ -35,11 +36,11 @@ class FarmingSeasonController extends Controller
     }
     public function GetFarmingSeasonById($id)
     {
-        $farmingSeason = FarmingSeason::findOrFail($id);
+        $farmingSeason = FarmingProgress::findOrFail($id);
 
         return response()->json([
             'status' => 'success',
-            'farming_season' => $farmingSeason,
+            'farming_progress' => $farmingSeason,
         ]);
 
     }
