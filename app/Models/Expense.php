@@ -14,6 +14,7 @@ class Expense extends Model
         'name',
         'description',
         'date',
+        'amount',
         'farming_progress_id',
         'user_id',
     ];

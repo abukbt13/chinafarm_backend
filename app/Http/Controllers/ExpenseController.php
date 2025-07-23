@@ -27,6 +27,7 @@ class ExpenseController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'amount' => 'required',
             'date' => 'required|date',
             'farming_progress_id' => 'required|exists:farming_progress,id',
         ]);
@@ -34,5 +35,29 @@ class ExpenseController extends Controller
 
         $expense = Expense::create($validated);
         return response()->json(['status' => 'success'], 201);
+    }
+    public function editExpenses(Request $request, $season_id, $expense_id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+            'farming_progress_id' => 'required|exists:farming_progress,id',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        $expense = Expense::where('id', $expense_id)
+            ->where('farming_progress_id', $season_id)
+            ->first();
+
+        if (!$expense) {
+            return response()->json(['message' => 'Expense not found'], 404);
+        }
+
+        $expense->update($validated);
+
+        return response()->json(['status' => 'success', 'message' => 'Expense updated successfully']);
     }
 }

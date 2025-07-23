@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->string('activity');
             $table->text('description');
             $table->json('pictures')->nullable(); // store multiple image paths/URLs
+            $table->date('date');
             $table->text('season_id');
             $table->text('user_id');
             $table->timestamps();

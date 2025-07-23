@@ -22,6 +22,7 @@ class MilestoneController extends Controller
     public function create(Request $request,$id)
     {
         $validated = $request->validate([
+            'activity' => 'required|string|max:255',
             'date' => 'required|date',
             'description' => 'required|string',
             'pictures' => 'nullable|array',
@@ -30,12 +31,34 @@ class MilestoneController extends Controller
 
         $picturePaths = [];
 
+
         if ($request->hasFile('pictures')) {
             foreach ($request->file('pictures') as $image) {
-                $originalName = $image->getClientOriginalName(); // original filename (e.g., "spraying-day1.jpg")
-                $filename = time() . '-' . $originalName; // make it unique by prefixing with timestamp
-                $path = $image->storeAs('public/uploads/milestones', $filename); // Stored in storage/app/public/uploads/milestones
-                $picturePaths[] = Storage::url('uploads/milestones/' . $filename); // Returns /storage/uploads/milestones/...
+                $originalName = $image->getClientOriginalName(); // e.g., spraying-day1.jpg
+                $filename = time() . '-' . $originalName;
+
+                // Define paths
+                $relativePath = 'uploads/milestones/' . $filename;
+                $fullStoragePath = storage_path('app/public/' . $relativePath);
+
+                // Create directory if not exists
+                if (!file_exists(dirname($fullStoragePath))) {
+                    mkdir(dirname($fullStoragePath), 0777, true);
+                }
+
+                // Load and compress using GD
+                $imageResource = imagecreatefromstring(file_get_contents($image->getRealPath()));
+                if ($imageResource === false) {
+                    continue; // Skip if not a valid image
+                }
+
+                // Convert to JPEG with reduced quality (e.g., 70%)
+                imagejpeg($imageResource, $fullStoragePath, 70); // quality: 0 (worst) - 100 (best)
+
+                imagedestroy($imageResource); // Free up memory
+
+                // Store public path
+                $picturePaths[] = 'uploads/milestones/' . $filename;
             }
         }
 
@@ -43,6 +66,7 @@ class MilestoneController extends Controller
             'user_id'=>Auth::user()->id,
             'season_id'=>$id,
             'date' => $validated['date'],
+            'activity' => $validated['activity'],
             'description' => $validated['description'],
             'pictures' => $picturePaths,
         ]);

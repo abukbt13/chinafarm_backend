@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //    Route::get('expenses/{season_id}', ExpenseController::class,'GetExpenses');
     Route::post('/expenses/{season_id}', [ExpenseController::class, 'storeExpenses']);
+    Route::post('/expenses/{season_id}/{expense_id}', [ExpenseController::class, 'editExpenses']);
     Route::get('/expenses/{season_id}', [ExpenseController::class, 'ShowExpenses']);
 
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->date('date');
+            $table->integer('amount');
 
             $table->foreignId('farming_progress_id')
                 ->constrained('farming_progress')
