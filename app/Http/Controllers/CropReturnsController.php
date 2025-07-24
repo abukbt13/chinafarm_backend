@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
+use App\Models\CropReturns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ExpenseController extends Controller
+class CropReturnsController extends Controller
 {
-    public function ShowExpenses($season_id)
+    public function ShowCropReturnss($season_id)
     {
-        $expenses = Expense::with('user')
+        $CropReturns = CropReturns::with('user')
             ->where('farming_progress_id', $season_id)
             ->latest()
             ->get();
 
         return response()->json([
             'status' => 'success',
-            'expenses' => $expenses, // ✅ PLURAL and a collection
+            'CropReturns' => $CropReturns, // ✅ PLURAL and a collection
         ]);
     }
 
-    // ✅ Create a new expense
-    public function storeExpenses(Request $request)
+    // ✅ Create a new CropReturns
+    public function storeCropReturns(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -33,10 +33,10 @@ class ExpenseController extends Controller
         ]);
         $validated['user_id'] = Auth::user()->id;
 
-        $expense = Expense::create($validated);
+        $CropReturns = CropReturns::create($validated);
         return response()->json(['status' => 'success'], 201);
     }
-    public function editExpenses(Request $request, $season_id, $expense_id)
+    public function editCropReturnss(Request $request, $season_id, $CropReturns_id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -48,32 +48,32 @@ class ExpenseController extends Controller
 
         $validated['user_id'] = Auth::id();
 
-        $expense = Expense::where('id', $expense_id)
+        $CropReturns = CropReturns::where('id', $CropReturns_id)
             ->where('farming_progress_id', $season_id)
             ->first();
 
-        if (!$expense) {
-            return response()->json(['message' => 'Expense not found'], 404);
+        if (!$CropReturns) {
+            return response()->json(['message' => 'CropReturns not found'], 404);
         }
 
-        $expense->update($validated);
+        $CropReturns->update($validated);
 
-        return response()->json(['status' => 'success', 'message' => 'Expense updated successfully']);
+        return response()->json(['status' => 'success', 'message' => 'CropReturns updated successfully']);
     }
 
-    public function deleteExpenses($season_id, $expense_id)
+    public function DeleteCropReturnss($season_id, $CropReturns_id)
     {
-        $expense = Expense::where('id', $expense_id)
+        $CropReturns = CropReturns::where('id', $CropReturns_id)
             ->where('farming_progress_id', $season_id)
             ->first();
 
-        if (!$expense) {
-            return response()->json(['status' => 'error', 'message' => 'Expense not found.'], 404);
+        if (!$CropReturns) {
+            return response()->json(['status' => 'error', 'message' => 'CropReturns not found.'], 404);
         }
 
-        $expense->delete();
+        $CropReturns->delete();
 
-        return response()->json(['status' => 'success', 'message' => 'Expense deleted successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'CropReturns deleted successfully.']);
     }
 
 }
