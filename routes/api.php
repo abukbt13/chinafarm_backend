@@ -24,8 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post('/milestone/{id}', [MilestoneController::class, 'create']);
+    Route::post('/milestone/delete/{id}', [MilestoneController::class, 'DeleteMilestone']);
     Route::get('/milestone/show/{id}', [MilestoneController::class, 'show']);
-    Route::get('/milestone/delete/{id}', [MilestoneController::class, 'DeleteMilestone']);
     Route::post('/milestone/update/{id}', [MilestoneController::class, 'UpdateMilestone']);
 
 

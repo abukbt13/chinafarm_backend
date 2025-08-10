@@ -12,7 +12,7 @@ class MilestoneController extends Controller
 {
     public function show($id)
     {
-        $milestone  = Milestone::where('season_id',$id)->get();
+        $milestone  = Milestone::where('season_id',$id)->latest()->get();
         return response()->json([
             'status' => 'success',
             'milestones' => $milestone
@@ -106,11 +106,12 @@ class MilestoneController extends Controller
 //        ]);
 //    }
 //
-//    public function DeleteMilestone($id)
-//    {
-//        $milestone = Milestone::findOrFail($id);
-//        $milestone->delete();
-//
-//        return response()->json(['status' => 'success', 'message' => 'Milestone deleted']);
-//    }
+    public function DeleteMilestone($id)
+    {
+        $milestone = Milestone::findOrFail($id);
+//        dd($milestone);
+        $milestone->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Milestone deleted']);
+    }
 }
