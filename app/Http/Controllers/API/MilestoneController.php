@@ -76,6 +76,76 @@ class MilestoneController extends Controller
             'milestone' => $milestone
         ], 201);
     }
+
+    public function update(Request $request, $id)
+    {
+
+        $validated = $request->validate([
+            'activity' => 'required|string|max:255',
+            'date' => 'required|date',
+            'description' => 'required|string',
+            'current_pictures' => 'nullable|array',   // pictures to keep
+            'pictures' => 'nullable|array',           // new uploads
+            'pictures.*' => 'image|mimes:jpg,jpeg,png,webp',
+        ]);
+
+        $milestone = Milestone::findOrFail($id);
+
+        // Get pictures to keep (from request)
+        $currentPictures = $request->current_pictures ?? [];
+
+        // Delete images that are in DB but not in current_pictures
+        $toDelete = array_diff($milestone->pictures ?? [], $currentPictures);
+        foreach ($toDelete as $pic) {
+            $filePath = storage_path('app/public/' . $pic);
+            if (file_exists($filePath)) {
+                unlink($filePath); // delete file from storage
+            }
+        }
+
+        // Start with retained pictures
+        $picturePaths = $currentPictures;
+
+        // Handle new uploads
+        if ($request->hasFile('pictures')) {
+            foreach ($request->file('pictures') as $image) {
+                $originalName = $image->getClientOriginalName();
+                $filename = time() . '-' . $originalName;
+
+                $relativePath = 'uploads/milestones/' . $filename;
+                $fullStoragePath = storage_path('app/public/' . $relativePath);
+
+                if (!file_exists(dirname($fullStoragePath))) {
+                    mkdir(dirname($fullStoragePath), 0777, true);
+                }
+
+                $imageResource = imagecreatefromstring(file_get_contents($image->getRealPath()));
+                if ($imageResource === false) {
+                    continue;
+                }
+
+                imagejpeg($imageResource, $fullStoragePath, 70);
+                imagedestroy($imageResource);
+
+                $picturePaths[] = $relativePath;
+            }
+        }
+
+        // Update milestone
+        $milestone->update([
+            'date' => $validated['date'],
+            'activity' => $validated['activity'],
+            'description' => $validated['description'],
+            'pictures' => $picturePaths,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Milestone updated successfully',
+            'milestone' => $milestone
+        ], 200);
+    }
+
 //
 //    public function show($id)
 //    {
@@ -109,9 +179,29 @@ class MilestoneController extends Controller
     public function DeleteMilestone($id)
     {
         $milestone = Milestone::findOrFail($id);
-//        dd($milestone);
+
+        // decode pictures (in case it's stored as JSON)
+        $pictures = is_array($milestone->pictures)
+            ? $milestone->pictures
+            : json_decode($milestone->pictures, true);
+
+        if ($pictures) {
+            foreach ($pictures as $pic) {
+                $filePath = storage_path('app/public/' . $pic);
+
+                if (file_exists($filePath)) {
+                    unlink($filePath); // delete file from storage
+                }
+            }
+        }
+
+        // delete milestone record
         $milestone->delete();
 
-        return response()->json(['status' => 'success', 'message' => 'Milestone deleted']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Milestone and its pictures deleted'
+        ]);
     }
+
 }
