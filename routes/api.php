@@ -19,7 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/farming-progress', [FarmingSeasonController::class, 'store']);
     Route::get('/farming-progress', [FarmingSeasonController::class, 'show']);
-
     Route::get('/farming-progress/{id}', [FarmingSeasonController::class, 'GetFarmingSeasonById']);
 
 

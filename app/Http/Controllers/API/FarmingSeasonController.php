@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\FarmingProgress;
 use App\Models\FarmingSeason;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
 class FarmingSeasonController extends Controller
@@ -28,11 +29,13 @@ class FarmingSeasonController extends Controller
         ]);
     }
     public function show(){
-        $crops = FarmingProgress::all();
+        $crops = FarmingProgress::where('user_id', auth()->id())->get();
+
         return response()->json([
             'status' => 'success',
             'crops' => $crops,
         ]);
+
     }
     public function GetFarmingSeasonById($id)
     {
