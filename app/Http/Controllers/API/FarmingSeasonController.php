@@ -37,6 +37,15 @@ class FarmingSeasonController extends Controller
         ]);
 
     }
+    public function countFarmingProjects(){
+        $activeprojects = FarmingProgress::where('user_id', auth()->id() and 'status','pending')->count();
+
+        return response()->json([
+            'status' => 'success',
+            'projects' => $activeprojects,
+        ]);
+
+    }
     public function GetFarmingSeasonById($id)
     {
         $farmingSeason = FarmingProgress::findOrFail($id);
