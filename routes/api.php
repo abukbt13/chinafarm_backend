@@ -5,6 +5,7 @@ use App\Http\Controllers\API\CropReturnsController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FarmProjectController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\PlantingSuggestionController;
 use App\Http\Controllers\ProjectReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/project_returns/{season_id}', [ProjectReturnController::class, 'ShowProjectReturns']);
     Route::post('/project_returns/update/{season_id}/{expense_id}', [ProjectReturnController::class, 'EditProjectReturns']);
     Route::delete('/project_returns/delete/{season_id}/{expense_id}', [ProjectReturnController::class, 'DeleteProjectReturns']);
+
+
+    Route::get('/planting-suggestions', [PlantingSuggestionController::class, 'index']);
+    Route::post('/planting-suggestions', [PlantingSuggestionController::class, 'store']);
 
     Route::get('/profile', fn (Request $request) => $request->user());
 
