@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->json('pictures')->nullable(); // store multiple image paths/URLs
             $table->date('date');
-            $table->text('season_id');
-            $table->text('user_id');
+            $table->foreignId('farm_project_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

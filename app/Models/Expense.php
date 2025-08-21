@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Expense extends Model
 {
     use HasFactory;
-
-    //Fields that can be mass-assigned
     protected $fillable = [
         'name',
         'description',
@@ -20,9 +18,9 @@ class Expense extends Model
     ];
 
     // 🔁 Relationship: Expense belongs to a farming progress
-    public function farmingProgress()
+    public function FarmProject()
     {
-        return $this->belongsTo(FarmingProgress::class);
+        return $this->belongsTo(FarmProject::class);
     }
 
     // 🔁 Relationship: Expense belongs to a user

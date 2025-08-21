@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FarmingProgress extends Model
+class FarmProject extends Model
 {
     protected $fillable = [
         'crop',

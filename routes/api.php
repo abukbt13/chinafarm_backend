@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\FarmingSeasonController;
-use App\Http\Controllers\API\MilestoneController;
-use App\Http\Controllers\CropReturnsController;
+use App\Http\Controllers\API\CropReturnsController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FarmProjectController;
+use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\ProjectReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,10 +18,10 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/farming-progress', [FarmingSeasonController::class, 'store']);
-    Route::get('/farming-progress', [FarmingSeasonController::class, 'show']);
-    Route::get('/farming-progress/count', [FarmingSeasonController::class, 'countFarmingProjects']);
-    Route::get('/farming-progress/{id}', [FarmingSeasonController::class, 'GetFarmingSeasonById']);
+    Route::post('/farming-projects', [FarmProjectController::class, 'store']);
+    Route::get('/farming-projects', [FarmProjectController::class, 'show']);
+    Route::get('/farming-projects/count', [FarmProjectController::class, 'countFarmingProjects']);
+    Route::get('/farming-projects/{id}', [FarmProjectController::class, 'GetFarmingSeasonById']);
 
 
     Route::post('/milestone/{id}', [MilestoneController::class, 'create']);
@@ -29,15 +30,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/milestone/show/{id}', [MilestoneController::class, 'show']);
 
 
-    Route::post('/expenses/{season_id}', [ExpenseController::class, 'storeExpenses']);
-    Route::get('/expenses/{season_id}', [ExpenseController::class, 'ShowExpenses']);
-    Route::post('/expenses/update/{season_id}/{expense_id}', [ExpenseController::class, 'editExpenses']);
-    Route::delete('/expenses/delete/{season_id}/{expense_id}', [ExpenseController::class, 'deleteExpenses']);
+    Route::post('/expenses/{season_id}', [ExpenseController::class, 'storeExpense']);
+    Route::get('/expenses/{season_id}', [ExpenseController::class, 'ShowExpense']);
+    Route::post('/expenses/update/{season_id}/{expense_id}', [ExpenseController::class, 'editExpense']);
+    Route::delete('/expenses/delete/{season_id}/{expense_id}', [ExpenseController::class, 'deleteExpense']);
 
-    Route::post('/crop_returns/{season_id}', [CropReturnsController::class, 'storeCropReturns']);
-    Route::get('/crop_returns/{season_id}', [CropReturnsController::class, 'ShowCropReturnss']);
-    Route::post('/crop_returns/update/{season_id}/{expense_id}', [CropReturnsController::class, 'EditCropReturnss']);
-    Route::delete('/crop_returns/delete/{season_id}/{expense_id}', [CropReturnsController::class, 'DeleteCropReturnss']);
+    Route::post('/project_returns/{season_id}', [ProjectReturnController::class, 'storeProjectReturns']);
+    Route::get('/project_returns/{season_id}', [ProjectReturnController::class, 'ShowProjectReturns']);
+    Route::post('/project_returns/update/{season_id}/{expense_id}', [ProjectReturnController::class, 'EditProjectReturns']);
+    Route::delete('/project_returns/delete/{season_id}/{expense_id}', [ProjectReturnController::class, 'DeleteProjectReturns']);
 
     Route::get('/profile', fn (Request $request) => $request->user());
 

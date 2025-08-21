@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\FarmingProgress;
-use App\Models\FarmingSeason;
-use Illuminate\Container\Attributes\Auth;
+use App\Models\FarmProject;
 use Illuminate\Http\Request;
 
-class FarmingSeasonController extends Controller
+class FarmProjectController extends Controller
 {
     public function store(Request $request)
     {
@@ -21,7 +18,7 @@ class FarmingSeasonController extends Controller
 //            dd($validated);
         $validated['user_id'] = auth()->id(); // ✅ Add logged-in user ID
 
-        $season = FarmingProgress::create($validated);
+        $season = FarmProject::create($validated);
 
         return response()->json([
             'status' => 'success',
@@ -29,7 +26,7 @@ class FarmingSeasonController extends Controller
         ]);
     }
     public function show(){
-        $crops = FarmingProgress::where('user_id', auth()->id())->get();
+        $crops = FarmProject::where('user_id', auth()->id())->get();
 
         return response()->json([
             'status' => 'success',
@@ -38,7 +35,7 @@ class FarmingSeasonController extends Controller
 
     }
     public function countFarmingProjects(){
-        $activeprojects = FarmingProgress::where('user_id', auth()->id() and 'status','pending')->count();
+        $activeprojects = FarmProject::where('user_id', auth()->id())->where('status','pending')->count();
 
         return response()->json([
             'status' => 'success',
@@ -48,7 +45,7 @@ class FarmingSeasonController extends Controller
     }
     public function GetFarmingSeasonById($id)
     {
-        $farmingSeason = FarmingProgress::findOrFail($id);
+        $farmingSeason = FarmProject::findOrFail($id);
 
         return response()->json([
             'status' => 'success',

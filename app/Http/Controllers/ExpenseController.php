@@ -8,21 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    public function ShowExpenses($season_id)
+
+    public function ShowExpense($season_id)
     {
-        $expenses = Expense::with('user')
+        $Expense = Expense::with('user')
             ->where('farming_progress_id', $season_id)
             ->latest()
             ->get();
 
         return response()->json([
             'status' => 'success',
-            'expenses' => $expenses, // ✅ PLURAL and a collection
+            'Expense' => $Expense, // ✅ PLURAL and a collection
         ]);
     }
 
     // ✅ Create a new expense
-    public function storeExpenses(Request $request)
+    public function storeExpense(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -36,7 +37,7 @@ class ExpenseController extends Controller
         $expense = Expense::create($validated);
         return response()->json(['status' => 'success'], 201);
     }
-    public function editExpenses(Request $request, $season_id, $expense_id)
+    public function editExpense(Request $request, $season_id, $expense_id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -61,7 +62,7 @@ class ExpenseController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Expense updated successfully']);
     }
 
-    public function deleteExpenses($season_id, $expense_id)
+    public function deleteExpense($season_id, $expense_id)
     {
         $expense = Expense::where('id', $expense_id)
             ->where('farming_progress_id', $season_id)
@@ -75,5 +76,4 @@ class ExpenseController extends Controller
 
         return response()->json(['status' => 'success', 'message' => 'Expense deleted successfully.']);
     }
-
 }

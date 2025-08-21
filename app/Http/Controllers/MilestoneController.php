@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Milestone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class MilestoneController extends Controller
 {
+
     public function show($id)
     {
-        $milestone  = Milestone::where('season_id',$id)->latest()->get();
+        $milestone  = Milestone::where('farm_project_id',$id)->latest()->get();
+//        dd($milestone);
         return response()->json([
             'status' => 'success',
-            'milestones' => $milestone
+            'milestone' => $milestone
         ]);
     }
 
@@ -38,7 +38,7 @@ class MilestoneController extends Controller
                 $filename = time() . '-' . $originalName;
 
                 // Define paths
-                $relativePath = 'uploads/milestones/' . $filename;
+                $relativePath = 'uploads/Milestone/' . $filename;
                 $fullStoragePath = storage_path('app/public/' . $relativePath);
 
                 // Create directory if not exists
@@ -58,13 +58,13 @@ class MilestoneController extends Controller
                 imagedestroy($imageResource); // Free up memory
 
                 // Store public path
-                $picturePaths[] = 'uploads/milestones/' . $filename;
+                $picturePaths[] = 'uploads/Milestone/' . $filename;
             }
         }
 
         $milestone = Milestone::create([
             'user_id'=>Auth::user()->id,
-            'season_id'=>$id,
+            'farm_project_id'=>$id,
             'date' => $validated['date'],
             'activity' => $validated['activity'],
             'description' => $validated['description'],
@@ -112,7 +112,7 @@ class MilestoneController extends Controller
                 $originalName = $image->getClientOriginalName();
                 $filename = time() . '-' . $originalName;
 
-                $relativePath = 'uploads/milestones/' . $filename;
+                $relativePath = 'uploads/Milestone/' . $filename;
                 $fullStoragePath = storage_path('app/public/' . $relativePath);
 
                 if (!file_exists(dirname($fullStoragePath))) {
@@ -203,5 +203,4 @@ class MilestoneController extends Controller
             'message' => 'Milestone and its pictures deleted'
         ]);
     }
-
 }

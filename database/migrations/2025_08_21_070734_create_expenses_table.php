@@ -18,13 +18,9 @@ return new class extends Migration
             $table->date('date');
             $table->integer('amount');
 
-            $table->foreignId('farming_progress_id')
-                ->constrained('farming_progress')
-                ->onDelete('cascade'); // Optional: auto-delete expenses if the progress is deleted
+            $table->foreignId('farm_project_id')->constrained()->onDelete('cascade');
 
-            $table->foreignId('user_id')
-                ->constrained()
-                ->onDelete('cascade'); // Optional: cascade on user delete
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('crop_returns', function (Blueprint $table) {
+        Schema::create('project_returns', function (Blueprint $table) {
             $table->id();
-            // Foreign key to link to farming progress or season
-            $table->foreignId('farming_progress_id')->constrained('farming_progress')->onDelete('cascade');
+            // Foreign key to link to farm project season
+            $table->foreignId('farm_project_id')->constrained()->onDelete('cascade');
 
             // Core return details
             $table->string('name');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('crop_returns');
+        Schema::dropIfExists('project_returns');
     }
 };

@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CropReturns;
+use App\Models\ProjectReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CropReturnsController extends Controller
+class ProjectReturnController extends Controller
 {
-    public function ShowCropReturnss($season_id)
+    public function storeProjectReturns($season_id)
     {
-        $CropReturns = CropReturns::with('user')
+        $ProjectReturns = ProjectReturn::with('user')
             ->where('farming_progress_id', $season_id)
             ->latest()
             ->get();
 
         return response()->json([
             'status' => 'success',
-            'CropReturns' => $CropReturns, // ✅ PLURAL and a collection
+            'ProjectReturns' => $ProjectReturns, // ✅ PLURAL and a collection
         ]);
     }
 
-    // ✅ Create a new CropReturns
-    public function storeCropReturns(Request $request)
+    // ✅ Create a new ProjectReturns
+    public function storeProjectReturns(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -33,10 +33,10 @@ class CropReturnsController extends Controller
         ]);
         $validated['user_id'] = Auth::user()->id;
 
-        $CropReturns = CropReturns::create($validated);
+        $ProjectReturns = ProjectReturn::create($validated);
         return response()->json(['status' => 'success'], 201);
     }
-    public function editCropReturnss(Request $request, $season_id, $CropReturns_id)
+    public function editProjectReturns(Request $request, $season_id, $ProjectReturns_id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -48,32 +48,31 @@ class CropReturnsController extends Controller
 
         $validated['user_id'] = Auth::id();
 
-        $CropReturns = CropReturns::where('id', $CropReturns_id)
+        $ProjectReturns = ProjectReturn::where('id', $ProjectReturns_id)
             ->where('farming_progress_id', $season_id)
             ->first();
 
-        if (!$CropReturns) {
-            return response()->json(['message' => 'CropReturns not found'], 404);
+        if (!$ProjectReturns) {
+            return response()->json(['message' => 'ProjectReturns not found'], 404);
         }
 
-        $CropReturns->update($validated);
+        $ProjectReturns->update($validated);
 
-        return response()->json(['status' => 'success', 'message' => 'CropReturns updated successfully']);
+        return response()->json(['status' => 'success', 'message' => 'ProjectReturns updated successfully']);
     }
 
-    public function DeleteCropReturnss($season_id, $CropReturns_id)
+    public function DeleteProjectReturns($season_id, $ProjectReturns_id)
     {
-        $CropReturns = CropReturns::where('id', $CropReturns_id)
+        $ProjectReturns = ProjectReturn::where('id', $ProjectReturns_id)
             ->where('farming_progress_id', $season_id)
             ->first();
 
-        if (!$CropReturns) {
-            return response()->json(['status' => 'error', 'message' => 'CropReturns not found.'], 404);
+        if (!$ProjectReturns) {
+            return response()->json(['status' => 'error', 'message' => 'ProjectReturns not found.'], 404);
         }
 
-        $CropReturns->delete();
+        $ProjectReturns->delete();
 
-        return response()->json(['status' => 'success', 'message' => 'CropReturns deleted successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'ProjectReturns deleted successfully.']);
     }
-
 }

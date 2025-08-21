@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CropReturns extends Model
+class ProjectReturn extends Model
 {
     protected $fillable = [
         'name',
@@ -16,9 +16,9 @@ class CropReturns extends Model
     ];
 
     // 🔁 Relationship: Expense belongs to a farming progress
-    public function farmingProgress()
+    public function farmProject()
     {
-        return $this->belongsTo(FarmingProgress::class);
+        return $this->belongsTo(FarmProject::class);
     }
 
     // 🔁 Relationship: Expense belongs to a user
