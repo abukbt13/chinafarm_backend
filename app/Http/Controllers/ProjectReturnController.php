@@ -8,16 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectReturnController extends Controller
 {
-    public function storeProjectReturns($season_id)
+    public function showProjectReturns($season_id)
     {
         $ProjectReturns = ProjectReturn::with('user')
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $season_id)
             ->latest()
             ->get();
 
         return response()->json([
             'status' => 'success',
-            'ProjectReturns' => $ProjectReturns, // ✅ PLURAL and a collection
+            'project_returns' => $ProjectReturns, // ✅ PLURAL and a collection
         ]);
     }
 
@@ -29,7 +29,7 @@ class ProjectReturnController extends Controller
             'description' => 'nullable|string',
             'amount' => 'required',
             'date' => 'required|date',
-            'farming_progress_id' => 'required|exists:farming_progress,id',
+            'farm_project_id' => 'required|exists:farm_projects,id',
         ]);
         $validated['user_id'] = Auth::user()->id;
 
@@ -43,13 +43,13 @@ class ProjectReturnController extends Controller
             'description' => 'nullable|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'farming_progress_id' => 'required|exists:farming_progress,id',
+            'farm_project_id' => 'required|exists:farm_projects,id',
         ]);
 
         $validated['user_id'] = Auth::id();
 
         $ProjectReturns = ProjectReturn::where('id', $ProjectReturns_id)
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $season_id)
             ->first();
 
         if (!$ProjectReturns) {
@@ -64,7 +64,7 @@ class ProjectReturnController extends Controller
     public function DeleteProjectReturns($season_id, $ProjectReturns_id)
     {
         $ProjectReturns = ProjectReturn::where('id', $ProjectReturns_id)
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $season_id)
             ->first();
 
         if (!$ProjectReturns) {

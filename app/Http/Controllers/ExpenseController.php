@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Auth;
 class ExpenseController extends Controller
 {
 
-    public function ShowExpense($season_id)
+    public function ShowExpense($farm_project_id)
     {
         $Expense = Expense::with('user')
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $farm_project_id)
             ->latest()
             ->get();
 
         return response()->json([
             'status' => 'success',
-            'Expense' => $Expense, // ✅ PLURAL and a collection
+            'expense' => $Expense, // ✅ PLURAL and a collection
         ]);
     }
 
@@ -30,10 +30,9 @@ class ExpenseController extends Controller
             'description' => 'nullable|string',
             'amount' => 'required',
             'date' => 'required|date',
-            'farming_progress_id' => 'required|exists:farming_progress,id',
+            'farm_project_id' => 'required|exists:farm_projects,id',
         ]);
         $validated['user_id'] = Auth::user()->id;
-
         $expense = Expense::create($validated);
         return response()->json(['status' => 'success'], 201);
     }
@@ -65,7 +64,7 @@ class ExpenseController extends Controller
     public function deleteExpense($season_id, $expense_id)
     {
         $expense = Expense::where('id', $expense_id)
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $season_id)
             ->first();
 
         if (!$expense) {
