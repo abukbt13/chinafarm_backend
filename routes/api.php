@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CropReturnsController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FarmProjectController;
 use App\Http\Controllers\MilestoneController;
@@ -44,6 +45,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/planting-suggestions', [PlantingSuggestionController::class, 'index']);
     Route::post('/planting-suggestions', [PlantingSuggestionController::class, 'store']);
+
+
+    Route::post('/create-blogs', [BlogController::class, 'storeBlogs']);
+    Route::get('/show-blogs', [BlogController::class, 'ShowBlogs']);
+    Route::get('/show-blog/{hashid}', [BlogController::class, 'ShowBlog']);
+    Route::post('/update-blogs', [BlogController::class, 'UpdateBlogs']);
+    Route::post('/destroy-blogs', [BlogController::class, 'DestroyBlog']);
 
     Route::get('/profile', fn (Request $request) => $request->user());
 
