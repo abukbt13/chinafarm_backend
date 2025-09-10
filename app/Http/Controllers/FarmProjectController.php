@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\FarmProject;
+use App\Models\PlantingSuggestion;
 use Illuminate\Http\Request;
 
 class FarmProjectController extends Controller
@@ -36,10 +38,12 @@ class FarmProjectController extends Controller
     }
     public function countFarmingProjects(){
         $activeprojects = FarmProject::where('user_id', auth()->id())->where('status','pending')->count();
+        $blogs = Blog::where('user_id', auth()->id())->count();
+        $suggestion = PlantingSuggestion::where('user_id', auth()->id())->count();
 
         return response()->json([
             'status' => 'success',
-            'projects' => $activeprojects,
+            'summary' => ['activecrops'=>$activeprojects,'blogs'=>$blogs,'suggestions'=>$suggestion],
         ]);
 
     }
