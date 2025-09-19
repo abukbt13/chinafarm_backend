@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Expense;
 use App\Models\FarmProject;
 use App\Models\PlantingSuggestion;
+use App\Models\ProjectReturn;
 use Illuminate\Http\Request;
 
 class FarmProjectController extends Controller
@@ -49,12 +51,24 @@ class FarmProjectController extends Controller
     }
     public function GetFarmingSeasonById($id)
     {
-        $farmingSeason = FarmProject::findOrFail($id);
+        $project = FarmProject::findOrFail($id);
+
+        // Get totals by project id
+        $expense = Expense::where('farm_project_id', $id)->sum('amount');
+        $returns = ProjectReturn::where('farm_project_id', $id)->sum('amount');
+
+        // Calculate profit
+        $profit = $returns - $expense;
 
         return response()->json([
             'status' => 'success',
-            'farming_progress' => $farmingSeason,
+            'summary' => [
+                'project' => $project,
+                'expense' => $expense,
+                'returns' => $returns,
+                'profit' => $profit,
+            ],
         ]);
-
     }
+
 }

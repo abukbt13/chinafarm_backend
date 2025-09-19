@@ -15,10 +15,16 @@ class ExpenseController extends Controller
             ->where('farm_project_id', $farm_project_id)
             ->latest()
             ->get();
+        $total = Expense::with('user')
+            ->where('farm_project_id', $farm_project_id)
+            ->sum('amount');
 
         return response()->json([
             'status' => 'success',
-            'expense' => $Expense, // ✅ PLURAL and a collection
+            'expense' => [
+                'all_expense'=>$Expense,
+                'total' => $total,
+            ]
         ]);
     }
 
