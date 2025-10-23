@@ -19,17 +19,17 @@ class AdminUserSeeder extends Seeder
 
         // Create the admin user
         $admin = User::firstOrCreate(
-            ['email' => 'nikol@gmail.com'],
+            ['email' => 'chinafarm01@gmail.com'],
             [
-                'name' => 'Nikola',
-                'password' => Hash::make('password123'), // change later
+                'name' => 'China Farm 01',
+                'password' => Hash::make('2025@YearOfProgress'), // change later
             ]
         );
 
         // Assign the role
         $admin->assignRole($adminRole);
 
-        echo "✅ Admin user Nikola created successfully.\n";
-        echo "🔑 Email: nikol@gmail.com | Password: password123\n";
+        echo "✅ Admin user chinafarm01 created successfully.\n";
+        echo "🔑 Email: chinafarm01@gmail.com | Password: 2025@YearOfProgress\n";
     }
 }
