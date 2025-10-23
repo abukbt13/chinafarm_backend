@@ -8,30 +8,48 @@ namespace App\Http\Controllers\API;
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Validation\ValidationException;
     use App\Http\Controllers\Controller;
+    use Spatie\Permission\Models\Role;
 
-class AuthController extends Controller
+    class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
+        public function register(Request $request)
+        {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-        $token = $user->createToken('api-token')->plainTextToken;
+            // ✅ Hash the password before saving
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return response()->json([
-            'status' => 'success',
-            'user'=>$user,
-            'token' => $token,
-        ],201);
-    }
+            // Create or fetch the role
+            $farmerRole = Role::firstOrCreate(['name' => 'farmer']);
+            $user->assignRole($farmerRole);
+
+            // Create the token
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            // Get role name
+            $role = $user->getRoleNames()->first();
+
+            // Return a consistent JSON response
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration Successful',
+                'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $role,
+                ],
+            ]);
+        }
 
     public function login(Request $request)
     {
@@ -50,9 +68,16 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
+        $role = $user->getRoleNames()->first(); // returns e.g. "admin", "farmer", etc.
+
         return response()->json([
             'token' => $token,
-            'user' => $user
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $role,
+            ],
         ]);
     }
 

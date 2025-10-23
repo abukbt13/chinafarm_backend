@@ -8,6 +8,7 @@ use App\Http\Controllers\FarmProjectController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\PlantingSuggestionController;
 use App\Http\Controllers\ProjectReturnController;
+use App\Http\Controllers\RolePermissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/show-blog/{hashid}', [BlogController::class, 'ShowBlog']);
     Route::post('/update-blogs', [BlogController::class, 'UpdateBlogs']);
     Route::post('/destroy-blogs', [BlogController::class, 'DestroyBlog']);
+
+    Route::get('/roles-permissions', [RolePermissionController::class, 'index']);
+    Route::post('/roles/{roleId}/permissions', [RolePermissionController::class, 'assignPermissions']);
+
 
     Route::get('/profile', fn (Request $request) => $request->user());
 
