@@ -49,13 +49,13 @@ class ExpenseController extends Controller
             'description' => 'nullable|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'farming_progress_id' => 'required|exists:farming_progress,id',
+            'farm_project_id' => 'required|exists:farm_projects,id',
         ]);
 
         $validated['user_id'] = Auth::id();
 
         $expense = Expense::where('id', $expense_id)
-            ->where('farming_progress_id', $season_id)
+            ->where('farm_project_id', $season_id)
             ->first();
 
         if (!$expense) {

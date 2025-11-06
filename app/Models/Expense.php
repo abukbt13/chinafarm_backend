@@ -17,12 +17,6 @@ class Expense extends Model
         'user_id',
     ];
 
-    // 🔁 Relationship: Expense belongs to a farming progress
-    public function FarmProject()
-    {
-        return $this->belongsTo(FarmProject::class);
-    }
-
     // 🔁 Relationship: Expense belongs to a user
     public function user()
     {
