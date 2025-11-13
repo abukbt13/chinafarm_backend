@@ -71,4 +71,30 @@ class FarmProjectController extends Controller
         ]);
     }
 
+    public function getStatus($id)
+    {
+        $project = FarmProject::findOrFail($id);
+        return response()->json([
+            'status' => $project->status
+        ]);
+    }
+
+    // Update project status
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,pending,closed'
+        ]);
+
+        $project = FarmProject::findOrFail($id);
+//        dd($project);
+        $project->status = $request->status;
+        $project->save();
+
+        return response()->json([
+            'message' => "Project status updated to {$project->status}",
+            'status' => $project->status
+        ]);
+    }
+
 }

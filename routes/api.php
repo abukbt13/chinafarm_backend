@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/farming-projects', [FarmProjectController::class, 'show']);
     Route::get('/farming-projects/count', [FarmProjectController::class, 'countFarmingProjects']);
     Route::get('/farming-projects/{id}', [FarmProjectController::class, 'GetFarmingSeasonById']);
+    Route::get('/farming-projects/{id}/status', [FarmProjectController::class, 'getStatus']);
+    Route::post('/farming-projects/{id}/status', [FarmProjectController::class, 'updateStatus']);
 
 
     Route::post('/milestone/{id}', [MilestoneController::class, 'create']);
