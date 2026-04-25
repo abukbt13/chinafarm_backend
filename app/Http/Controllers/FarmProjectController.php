@@ -30,7 +30,11 @@ class FarmProjectController extends Controller
         ]);
     }
     public function show(){
-        $crops = FarmProject::where('user_id', auth()->id())->get();
+        $crops = FarmProject::where(
+            'user_id', auth()->id()
+        )
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return response()->json([
             'status' => 'success',
@@ -39,7 +43,7 @@ class FarmProjectController extends Controller
 
     }
     public function countFarmingProjects(){
-        $activeprojects = FarmProject::where('user_id', auth()->id())->where('status','pending')->count();
+        $activeprojects = FarmProject::where('user_id', auth()->id())->where('status','active')->count();
         $blogs = Blog::where('user_id', auth()->id())->count();
         $suggestion = PlantingSuggestion::where('user_id', auth()->id())->count();
 
