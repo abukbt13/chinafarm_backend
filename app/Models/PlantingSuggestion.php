@@ -8,8 +8,9 @@ class PlantingSuggestion extends Model
 {
     protected $fillable = [
         'crop_name',
-        'period',
-        'factor',
+        'planting_month',
+        'harvesting_month',
+        'reason',
         'user_id',
         ];
 }

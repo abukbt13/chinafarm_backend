@@ -17,15 +17,17 @@ class PlantingSuggestionController extends Controller
     {
         $request->validate([
             'crop_name' => 'required|string|max:255',
-            'period' => 'required|string|max:255',
-            'factor' => 'nullable|string',
+            'planting_month' => 'required|in:January,February,March,April,May,June,July,August,September,October,November,December',
+            'harvesting_month' => 'required|in:January,February,March,April,May,June,July,August,September,October,November,December',
+            'reason'=>'required|min:4'
         ]);
 
         return PlantingSuggestion::create([
             'user_id' => Auth::id(),
             'crop_name' => $request->crop_name,
-            'period' => $request->period,
-            'factor' => $request->factor,
+            'harvesting_month' => $request->harvesting_month,
+            'planting_month' => $request->planting_month,
+            'reason' => $request->reason,
         ]);
     }
 }
