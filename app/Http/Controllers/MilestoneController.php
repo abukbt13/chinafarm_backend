@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Milestone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 
 class MilestoneController extends Controller
 {
@@ -19,52 +22,59 @@ class MilestoneController extends Controller
         ]);
     }
 
-    public function create(Request $request,$id)
+
+    public function create(Request $request, $id)
     {
         $validated = $request->validate([
             'activity' => 'required|string|max:255',
             'date' => 'required|date',
             'description' => 'required|string',
             'pictures' => 'nullable|array',
-            'pictures.*' => 'image|mimes:jpg,jpeg,png,webp',
+            'pictures.*' => 'image|mimes:jpg,jpeg,png,webp,heic|max:10240',
         ]);
 
         $picturePaths = [];
 
-
         if ($request->hasFile('pictures')) {
-            foreach ($request->file('pictures') as $image) {
-                $originalName = $image->getClientOriginalName(); // e.g., spraying-day1.jpg
-                $filename = time() . '-' . $originalName;
 
-                // Define paths
+            $manager = new ImageManager(new Driver());
+
+            foreach ($request->file('pictures') as $image) {
+
+                $originalName = $image->getClientOriginalName();
+                $filename = time() . '-' . uniqid() . '-' . $originalName;
+
+                // path setup
                 $relativePath = 'uploads/Milestone/' . $filename;
                 $fullStoragePath = storage_path('app/public/' . $relativePath);
 
-                // Create directory if not exists
+                // create folder if not exists
                 if (!file_exists(dirname($fullStoragePath))) {
                     mkdir(dirname($fullStoragePath), 0777, true);
                 }
 
-                // Load and compress using GD
-                $imageResource = imagecreatefromstring(file_get_contents($image->getRealPath()));
-                if ($imageResource === false) {
-                    continue; // Skip if not a valid image
+                try {
+                    // read image
+                    $img = $manager->read($image->getRealPath());
+
+                    // resize if image is too large (important for mobile)
+                    $img->scale(width: 1200);
+
+                    // compress and save as JPEG (70% quality)
+                    $img->toJpeg(70)->save($fullStoragePath);
+
+                    $picturePaths[] = $relativePath;
+
+                } catch (\Exception $e) {
+                    \Log::error('Image upload failed: ' . $e->getMessage());
+                    continue;
                 }
-
-                // Convert to JPEG with reduced quality (e.g., 70%)
-                imagejpeg($imageResource, $fullStoragePath, 70); // quality: 0 (worst) - 100 (best)
-
-                imagedestroy($imageResource); // Free up memory
-
-                // Store public path
-                $picturePaths[] = 'uploads/Milestone/' . $filename;
             }
         }
 
         $milestone = Milestone::create([
-            'user_id'=>Auth::user()->id,
-            'farm_project_id'=>$id,
+            'user_id' => Auth::user()->id,
+            'farm_project_id' => $id,
             'date' => $validated['date'],
             'activity' => $validated['activity'],
             'description' => $validated['description'],
@@ -76,7 +86,6 @@ class MilestoneController extends Controller
             'milestone' => $milestone
         ], 201);
     }
-
     public function update(Request $request, $id)
     {
 
