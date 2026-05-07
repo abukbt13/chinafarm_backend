@@ -26,8 +26,8 @@ class MilestoneController extends Controller
         $validated = $request->validate([
             'activity' => 'required|string|max:255',
             'date' => 'required|date',
-            'description' => 'required|string',
             'pictures' => 'nullable|array',
+            'description' => 'nullable',
             'pictures.*' => 'image|mimes:jpg,jpeg,png,webp,heic|max:10240',
         ]);
 
@@ -57,7 +57,7 @@ class MilestoneController extends Controller
             'farm_project_id' => $id,
             'date' => $validated['date'],
             'activity' => $validated['activity'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? $validated['activity'],
             'pictures' => $picturePaths,
         ]);
 
