@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Milestone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 
 class MilestoneController extends Controller
@@ -37,38 +35,20 @@ class MilestoneController extends Controller
 
         if ($request->hasFile('pictures')) {
 
-            $manager = new ImageManager(new Driver());
-
             foreach ($request->file('pictures') as $image) {
 
                 $originalName = $image->getClientOriginalName();
+
                 $filename = time() . '-' . uniqid() . '-' . $originalName;
 
-                // path setup
-                $relativePath = 'uploads/Milestone/' . $filename;
-                $fullStoragePath = storage_path('app/public/' . $relativePath);
+                // store image directly without compression
+                $path = $image->storeAs(
+                    'uploads/Milestone',
+                    $filename,
+                    'public'
+                );
 
-                // create folder if not exists
-                if (!file_exists(dirname($fullStoragePath))) {
-                    mkdir(dirname($fullStoragePath), 0777, true);
-                }
-
-                try {
-                    // read image
-                    $img = $manager->read($image->getRealPath());
-
-                    // resize if image is too large (important for mobile)
-                    $img->scale(width: 1200);
-
-                    // compress and save as JPEG (70% quality)
-                    $img->toJpeg(70)->save($fullStoragePath);
-
-                    $picturePaths[] = $relativePath;
-
-                } catch (\Exception $e) {
-                    \Log::error('Image upload failed: ' . $e->getMessage());
-                    continue;
-                }
+                $picturePaths[] = $path;
             }
         }
 
