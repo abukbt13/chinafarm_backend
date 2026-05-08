@@ -9,6 +9,7 @@ use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\PlantingSuggestionController;
 use App\Http\Controllers\ProjectReturnController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\UserDetailsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/roles/{roleId}/permissions', [RolePermissionController::class, 'assignPermissions']);
 
 
-    Route::get('/profile', fn (Request $request) => $request->user());
+    Route::get('/profile', [UserDetailsController::class,'index']);
+    Route::post('/profile/update', [UserDetailsController::class,'update']);
 
 });

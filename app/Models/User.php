@@ -52,5 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(FarmingSeason::class);
     }
-
+    public function detail()
+    {
+        return $this->hasOne(UserDetail::class);
+    }
 }

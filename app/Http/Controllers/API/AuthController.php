@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\API;
 
     use App\Models\User;
+    use App\Models\UserDetail;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Validation\ValidationException;
@@ -26,6 +27,14 @@ namespace App\Http\Controllers\API;
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
+            // Create user details automatically
+            UserDetail::create([
+                'user_id' => $user->id,
+                'phone' => null,
+                'image' => null,
+                'location' => null,
+                'privacy' => 0
+            ]);
 
             // Create or fetch the role
             $farmerRole = Role::firstOrCreate(['name' => 'farmer']);
@@ -36,6 +45,7 @@ namespace App\Http\Controllers\API;
 
             // Get role name
             $role = $user->getRoleNames()->first();
+
 
             // Return a consistent JSON response
             return response()->json([
