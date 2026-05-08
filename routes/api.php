@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/farming-projects', [FarmProjectController::class, 'store']);
     Route::get('/farming-projects', [FarmProjectController::class, 'show']);
+    Route::post('/farming-projects/update/{id}', [FarmProjectController::class, 'update']);
     Route::get('/farming-projects/count', [FarmProjectController::class, 'countFarmingProjects']);
     Route::get('/farming-projects/{id}', [FarmProjectController::class, 'GetFarmingSeasonById']);
     Route::get('/farming-projects/{id}/status', [FarmProjectController::class, 'getStatus']);

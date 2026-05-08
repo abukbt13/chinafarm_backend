@@ -29,6 +29,44 @@ class FarmProjectController extends Controller
             'message' => 'Farming Season created.',
         ]);
     }
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'crop' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'description' => 'nullable|string',
+            'period' => 'nullable|numeric',
+        ]);
+
+        // find project belonging to logged in user
+        $season = FarmProject::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        // check if project exists
+        if (!$season) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        // update project
+        $season->update([
+            'crop' => $validated['crop'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'period' => $validated['period'] ?? null,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Farming project updated successfully.',
+            'project' => $season
+        ], 200);
+    }
     public function show(){
         $crops = FarmProject::where(
             'user_id', auth()->id()
