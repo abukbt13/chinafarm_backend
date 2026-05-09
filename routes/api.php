@@ -10,6 +10,7 @@ use App\Http\Controllers\PlantingSuggestionController;
 use App\Http\Controllers\ProjectReturnController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserDetailsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -64,5 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/profile', [UserDetailsController::class,'index']);
     Route::post('/profile/update', [UserDetailsController::class,'update']);
+
+    Route::get('/users', [UsersController::class,'showUsers']);
 
 });
