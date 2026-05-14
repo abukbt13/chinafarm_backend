@@ -14,10 +14,13 @@ class ProjectReturnController extends Controller
             ->where('farm_project_id', $season_id)
             ->latest()
             ->get();
-
+        $total = ProjectReturn::with('user')
+            ->where('farm_project_id', $season_id)
+            ->sum('amount');
         return response()->json([
             'status' => 'success',
             'project_returns' => $ProjectReturns, // ✅ PLURAL and a collection
+            'total' =>$total
         ]);
     }
 
